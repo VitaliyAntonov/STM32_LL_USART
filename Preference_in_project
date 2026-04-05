@@ -99,10 +99,10 @@ void USART3_IRQHandler(void)
     } else if (LL_USART_IsActiveFlag_PE(UART)) { // Parity error
       uartVal.errorFlag = TRANSIT_EC_FLAG_PE;
       LL_USART_ClearFlag_PE(UART);
-    } else if (LL_USART_IsActiveFlag_FE(UWB_UART)) { // Framing error
+    } else if (LL_USART_IsActiveFlag_FE(_UART)) { // Framing error
       uartVal.errorFlag = TRANSIT_EC_FLAG_FE;
       LL_USART_ClearFlag_FE(UART);
-    } else if (LL_USART_IsActiveFlag_NE(UWB_UART)) { // Noise error
+    } else if (LL_USART_IsActiveFlag_NE(_UART)) { // Noise error
       uartVal.errorFlag = TRANSIT_EC_FLAG_NE;
       LL_USART_ClearFlag_NE(UART);
     }
@@ -117,6 +117,8 @@ void USART3_IRQHandler(void)
 
     __UART_close_gran_in_gran(UART_READ_BAIT)
 
+        uartVal.crc = tabCrc_D5[uartVal.crc ^ uartVal.buff[uartVal.count]];
+        uartVal.count += 1;
 
     __UART_close_gran_in_gran(UART_CHECK_CRC)
 
